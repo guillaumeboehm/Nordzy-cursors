@@ -50,7 +50,7 @@ done
 
 # Display ascii art
 ascii_art() {
-    cat < nordzy-ascii-art.txt
+    cat < ${script_dir}/resources/nordzy-ascii-art.txt
     sleep 0.5
 }
 
