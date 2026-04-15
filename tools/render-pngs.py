@@ -216,10 +216,7 @@ if __name__ == '__main__':
 
 	if len(args) != 1:
 		fatalError("\nCall me with the SVG as a parameter.\n\n")
-	originalFilename = args[0]
-
-	svgFilename = originalFilename + '.svg'
-	shutil.copyfile(originalFilename, svgFilename)
+	svgFilename = args[0]
 
 	# setup program variables from command line (in other words, handle non-option args)
 	basename = os.path.splitext(svgFilename)[0]
