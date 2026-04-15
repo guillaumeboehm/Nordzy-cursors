@@ -4,13 +4,13 @@ script_dir="$(realpath "$(dirname "${0}")")"
 
 # Display ascii art
 ascii_art() {
-    cat < "${script_dir}/../resources/nordzy-ascii-art.txt"
+    cat <"${script_dir}/../resources/nordzy-ascii-art.txt"
     sleep 0.5
 }
 
 # Show help
 usage() {
-cat << EOF
+    cat <<EOF
 $0 helps you create Nordzy-cursor custom theme on your computer.
 
 Usage: $0 [OPTION]...
@@ -31,12 +31,10 @@ EOF
 }
 
 # Display an animation during long working time (ex. Creation of the theme)
-animation(){
+animation() {
     frames=("." ".." "...")
-    while kill -0 "${1}" > /dev/null 2>&1
-    do
-        for frame in "${frames[@]}"
-        do
+    while kill -0 "${1}" >/dev/null 2>&1; do
+        for frame in "${frames[@]}"; do
             printf "Rendering PNGs for %s %s  \r" "${2}" "${frame}"
             sleep 0.5
         done
@@ -44,12 +42,14 @@ animation(){
     printf "PNGs for %s finished \n" "${2}"
 }
 
-png_render(){
+png_render() {
+    local script_dir="${1}"
+    local theme_name="${2}"
     python "${script_dir}/render-pngs.py" "svgs/themes/${theme_name:-default_name}.svg"
     python "${script_dir}/render-pngs.py" "svgs/themes/${theme_name:-default_name}-spinner.svg"
 }
 
-change_color(){
+change_color() {
     # Create backup/copy of template file
     cp "${svg_template_main}" "${svg_template_main}.bck"
     cp "${svg_template_spinner}" "${svg_template_spinner}.bck"
@@ -87,14 +87,13 @@ change_color(){
     mv "${svg_template_spinner}.bck" "${svg_template_spinner}"
 }
 
-
-run(){
-    pushd "${script_dir}" > /dev/null || return 1
+run() {
+    pushd "${script_dir}" >/dev/null || return 1
 
     # Remove old theme
     rm -rf "../${theme_name}"
     # Renders PNGs
-    png_render "${theme_name}" > /dev/null 2>&1 &
+    png_render "${script_dir}" "${theme_name}" >/dev/null 2>&1 &
     pid=$!
     animation $pid "${theme_name}"
     # Make X11 cursors
@@ -113,8 +112,8 @@ run(){
         echo "Making the archive for ${theme_name}..."
         {
             tar -zcf "../archives/${archive_filename}" "${theme_name}/"
-        } > /dev/null
-        sha256sum "../archives/${archive_filename}" >> ../archives/checksums
+        } >/dev/null
+        sha256sum "../archives/${archive_filename}" >>../archives/checksums
     fi
 
     if [ -d "../xcursors/${theme_name}" ]; then
@@ -122,7 +121,7 @@ run(){
     fi
     mv "${theme_name}"/ ../xcursors/
 
-    popd > /dev/null || return 1
+    popd >/dev/null || return 1
     echo "The cursors theme is finished!"
 }
 
@@ -130,58 +129,58 @@ ascii_art
 export_theme=false
 while [[ "$#" -gt 0 ]]; do
     case "${1:-}" in
-        -h|--help)
-            usage
-            exit 0
-            ;;
-        -n|--name)
-            theme_name=${2}
-            shift 2
-            ;;
-        -f|--fill)
-            theme_color_fill=${2}
-            shift 2
-            ;;
-        -b|--border)
-            theme_color_border=${2}
-            shift 2
-            ;;
-        -a|--accent)
-            theme_color_accent=${2}
-            shift 2
-            ;;
-        -p|--purple)
-            theme_color_purple=${2}
-            shift 2
-            ;;
-        -g|--green)
-            theme_color_green=${2}
-            shift 2
-            ;;
-        -r|--red)
-            theme_color_red=${2}
-            shift 2
-            ;;
-        -o|--orange)
-            theme_color_orange=${2}
-            shift 2
-            ;;
-        -A|--archive)
-            export_theme=true
-            shift 1
-            ;;
-        -l|--lefthand)
-            left_hand='-lefthand'
-            shift 1
-            ;;
-        -R|--righthand)
-            # a bit dumb but I don't want to do something smarter heh
-            shift 1
-            ;;
-        *)
-            echo "Unrecognized parameter ${1}"
-            exit 1
-            ;;
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    -n | --name)
+        theme_name=${2}
+        shift 2
+        ;;
+    -f | --fill)
+        theme_color_fill=${2}
+        shift 2
+        ;;
+    -b | --border)
+        theme_color_border=${2}
+        shift 2
+        ;;
+    -a | --accent)
+        theme_color_accent=${2}
+        shift 2
+        ;;
+    -p | --purple)
+        theme_color_purple=${2}
+        shift 2
+        ;;
+    -g | --green)
+        theme_color_green=${2}
+        shift 2
+        ;;
+    -r | --red)
+        theme_color_red=${2}
+        shift 2
+        ;;
+    -o | --orange)
+        theme_color_orange=${2}
+        shift 2
+        ;;
+    -A | --archive)
+        export_theme=true
+        shift 1
+        ;;
+    -l | --lefthand)
+        left_hand='-lefthand'
+        shift 1
+        ;;
+    -R | --righthand)
+        # a bit dumb but I don't want to do something smarter heh
+        shift 1
+        ;;
+    *)
+        echo "Unrecognized parameter ${1}"
+        exit 1
+        ;;
     esac
 done
 
