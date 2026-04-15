@@ -49,42 +49,36 @@ png_render() {
     python "${script_dir}/render-pngs.py" "svgs/themes/${theme_name:-default_name}-spinner.svg"
 }
 
-change_color() {
-    # Create backup/copy of template file
-    cp "${svg_template_main}" "${svg_template_main}.bck"
-    cp "${svg_template_spinner}" "${svg_template_spinner}.bck"
+generate_colored_svg() {
+    # Copy of the template files
+    local theme_filename="${script_dir}/svgs/themes/${theme_name:-default_name}.svg"
+    local spinner_theme_filename="${script_dir}/svgs/themes/${theme_name:-default_name}-spinner.svg"
+
+    cp "${svg_template_main}" "${theme_filename}"
+    cp "${svg_template_spinner}" "${spinner_theme_filename}"
 
     # Change the fill color (black/#000000)
-    sed -i "s/#000000/${theme_color_fill:-#000000}/g" "${svg_template_main}"
-    sed -i "s/#000000/${theme_color_fill:-#000000}/g" "${svg_template_spinner}"
+    sed -i "s/#000000/${theme_color_fill:-#000000}/g" "${theme_filename}"
+    sed -i "s/#000000/${theme_color_fill:-#000000}/g" "${spinner_theme_filename}"
 
     # Change the border color (white/#ffffff)
-    sed -i "s/#ffffff/${theme_color_border:-#ffffff}/g" "${svg_template_main}"
-    sed -i "s/#ffffff/${theme_color_border:-#ffffff}/g" "${svg_template_spinner}"
+    sed -i "s/#ffffff/${theme_color_border:-#ffffff}/g" "${theme_filename}"
+    sed -i "s/#ffffff/${theme_color_border:-#ffffff}/g" "${spinner_theme_filename}"
 
     # Change the accent color (nord/#8fbcbb)
-    sed -i "s/#8fbcbb/${theme_color_accent:-#8fbcbb}/g" "${svg_template_spinner}"
+    sed -i "s/#8fbcbb/${theme_color_accent:-#8fbcbb}/g" "${spinner_theme_filename}"
 
     # Change the green color - plus sign (Green/#00ff00)
-    sed -i "s/#00ff00/${theme_color_green:-#00ff00}/g" "${svg_template_main}"
+    sed -i "s/#00ff00/${theme_color_green:-#00ff00}/g" "${theme_filename}"
 
     # Change the red color (Red/#ff0000)
-    sed -i "s/#ff0000/${theme_color_red:-#ff0000}/g" "${svg_template_main}"
+    sed -i "s/#ff0000/${theme_color_red:-#ff0000}/g" "${theme_filename}"
 
     # Change the purple color (Purple/#800080)
-    sed -i "s/#800080/${theme_color_purple:-#800080}/g" "${svg_template_main}"
+    sed -i "s/#800080/${theme_color_purple:-#800080}/g" "${theme_filename}"
 
     # Change the orange color (Orange/#ff7f2a)
-    sed -i "s/#ff7f2a/${theme_color_orange:-#ff7f2a}/g" "${svg_template_main}"
-
-    # Rename files with theme name.
-    # It will overwrite any existing theme with same name.
-    mv "${svg_template_main}" "${script_dir}/svgs/themes/${theme_name:-default_name}.svg"
-    mv "${svg_template_spinner}" "${script_dir}/svgs/themes/${theme_name:-default_name}-spinner.svg"
-
-    # Restore template file
-    mv "${svg_template_main}.bck" "${svg_template_main}"
-    mv "${svg_template_spinner}.bck" "${svg_template_spinner}"
+    sed -i "s/#ff7f2a/${theme_color_orange:-#ff7f2a}/g" "${theme_filename}"
 }
 
 run() {
@@ -188,5 +182,5 @@ theme_name="${theme_name}${left_hand}"
 svg_template_main="${script_dir}/svgs/nordzy-templates/Nordzy-cursors${left_hand}-template.svg"
 svg_template_spinner="${script_dir}/svgs/nordzy-templates/Nordzy-cursors${left_hand}-spinner-template.svg"
 
-change_color
+generate_colored_svg
 run
