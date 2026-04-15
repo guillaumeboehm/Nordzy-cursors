@@ -51,13 +51,8 @@ def dbg(msg):
 	if options.debug:
 		sys.stderr.write(msg)
 
-def cleanup():
-	if svgFilename != None and os.path.exists(svgFilename):
-		os.unlink(svgFilename)
-
 def fatalError(msg):
 	sys.stderr.write(msg)
-	cleanup()
 	sys.exit(20)
 
 
@@ -261,7 +256,5 @@ if __name__ == '__main__':
 
 		dbg('Saving slice as: "%s"' % sliceFName)
 		rect.renderFromSVG(svgFilename, sliceFName)
-
-	cleanup()
 
 	dbg('Slicing complete.')
