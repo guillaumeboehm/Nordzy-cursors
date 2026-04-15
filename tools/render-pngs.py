@@ -27,9 +27,12 @@ optParser.add_option('-d','--debug',action='store_true',dest='debug',help='Enabl
 optParser.add_option('-t','--test',action='store_true',dest='testing',help='Test mode: leave temporary files for examination.')
 optParser.add_option('-p','--sliceprefix',action='store',dest='sliceprefix',help='Specifies the prefix to use for individual slice filenames.')
 
-from xml.sax import saxutils, make_parser, SAXParseException, handler
+import os
+import shutil
+import sys
+import tempfile
+from xml.sax import SAXParseException, handler, make_parser, saxutils
 from xml.sax.handler import feature_namespaces
-import os, sys, tempfile, shutil
 
 if not os.path.exists('pngs/24'):
 	os.makedirs('pngs/24')
