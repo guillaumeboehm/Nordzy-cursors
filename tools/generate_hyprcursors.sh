@@ -201,13 +201,13 @@ function append_info_to_shape_meta_file() {
 
     # INFO: Resolve shapes overrides
     local overrides
-    overrides="$(grep "ln\s*-sf\s*${shape_name}" "${script_dir}/make.sh" | cut -d ' ' -f 4 | head -c -1 | tr '\n' ';')"
+    overrides="$(grep "ln\s*-sf\s*${shape_name}" "${script_dir}/make.sh" | awk '{print "define_override = "$4}')"
 
     # INFO: Write meta.hl
     echo "hotspot_x = $(perl -E "say ${hotspots_in[1]} / ${hotspots_in[0]}")" >>"${hyprcursor_shapes_dir}/${shape_name}/meta.hl"
     echo "hotspot_y = $(perl -E "say ${hotspots_in[2]} / ${hotspots_in[0]}")" >>"${hyprcursor_shapes_dir}/${shape_name}/meta.hl"
     if [ -n "${overrides}" ]; then
-        echo "define_override = ${overrides}" >>"${hyprcursor_shapes_dir}/${shape_name}/meta.hl"
+        echo "${overrides}" >>"${hyprcursor_shapes_dir}/${shape_name}/meta.hl"
     fi
 }
 
