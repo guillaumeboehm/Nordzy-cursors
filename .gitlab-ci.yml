@@ -1,0 +1,43 @@
+image: alpine
+
+stages:
+  - build
+
+build:
+  stage: build
+  before_script:
+    - echo "ipv6" >> /etc/modules
+    - apk update
+    - apk add hyprcursor
+    - apk add python3
+    - apk add py3-pip
+    - apk add inkscape
+    - apk add bash
+    - apk add xcursorgen
+    - apk add git
+    - git submodule update --init --recursive
+    - apk add pyside6
+    - pip install setuptools --break-system-packages --no-input
+    - cd tools/CursorCreate && sed -i 's/PySide6//' requirements.txt && pip install -r requirements.txt --break-system-packages --no-input && cd -
+    - cd tools/CursorCreate && python setup.py install -f && cd -
+  script:
+    - bash tools/generate_everything.sh
+  artifacts:
+    paths:
+      - archives/Nordzy-cursors-lefthand.tar.gz
+      - archives/Nordzy-cursors-lefthand_macos.zip
+      - archives/Nordzy-cursors-lefthand_windows.zip
+      - archives/Nordzy-cursors-white-lefthand.tar.gz
+      - archives/Nordzy-cursors-white-lefthand_macos.zip
+      - archives/Nordzy-cursors-white-lefthand_windows.zip
+      - archives/Nordzy-cursors-white.tar.gz
+      - archives/Nordzy-cursors-white_macos.zip
+      - archives/Nordzy-cursors-white_windows.zip
+      - archives/Nordzy-cursors.tar.gz
+      - archives/Nordzy-cursors_macos.zip
+      - archives/Nordzy-cursors_windows.zip
+      - archives/Nordzy-hyprcursors-lefthand.tar.gz
+      - archives/Nordzy-hyprcursors-white-lefthand.tar.gz
+      - archives/Nordzy-hyprcursors-white.tar.gz
+      - archives/Nordzy-hyprcursors.tar.gz
+      - archives/checksums

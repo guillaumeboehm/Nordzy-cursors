@@ -94,9 +94,9 @@ run() {
     echo "Making the X11 cursors for ${theme_name}..."
     # If this is a lefthand variant, we must use the lefthand hostspot file
     if [[ ${theme_name} =~ .*lefthand ]]; then
-        "${script_dir}/make.sh" "${theme_name}" '-lefthand'
+        bash make.sh "${theme_name}" '-lefthand'
     else
-        "${script_dir}/make.sh" "${theme_name}"
+        bash make.sh "${theme_name}"
     fi
 
     if ${export_theme}; then
